@@ -1,5 +1,6 @@
 import pygame, sys
 from pygame.locals import *
+from math import sqrt
 
 pygame.init()
 
@@ -11,10 +12,11 @@ def main():
 	STONEWIDTH = 24
 	STONEWHITEX = None
 	STONEWHITEY = None
-	STONEWHITE = pygame.image.load("black_stone.png")
+	STONEWHITE = pygame.image.load("white_stone.png")
 	STONEWHITE = pygame.transform.scale(STONEWHITE, (STONEWIDTH, STONEHEIGHT))
 
 	#set up display surface
+	global DISPLAYSURF
 	DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
 	pygame.display.set_caption("GO")
 	board_img = pygame.image.load("go_board.png").convert()
@@ -28,7 +30,11 @@ def main():
 				STONEWHITEX -= STONEWIDTH / 2
 				STONEWHITEY -= STONEHEIGHT / 2
 				DISPLAYSURF.blit(board_img, (0, 0))
-				DISPLAYSURF.blit(STONEWHITE, (STONEWHITEX, STONEWHITEY))
+				#DISPLAYSURF.blit(STONEWHITE, (STONEWHITEX, STONEWHITEY))
+			elif event.type == MOUSEBUTTONDOWN:
+				place_stone(event.pos)
+				#print(event.pos)
+				pass
 			elif event.type == QUIT:
 				pygame.quit()
 				sys.exit()
@@ -43,6 +49,36 @@ for i in range(len(game_board[0]) - 1):
 	game_board[19][i] = i
 game_board[19][19] = ""
 
+def place_stone(pos):
+	# TODO: MAKE STONEWIDTH AND STONEHEIGHT GLOBAL
+	STONEHEIGHT = 24
+	STONEWIDTH = 24
+	BOARDMARGIN = 20
+	BOXWIDTH = 35
+	LIMITRADIUS = BOXWIDTH / 2
+	posx, posy = pos
+	posx -= BOARDMARGIN
+	posy -= BOARDMARGIN
+	if posx < 0:
+		posx = 0
+	if posy < 0:
+		posy = 0
+	#round to nearest int
+	rownum = int(posy / BOXWIDTH + 0.5)
+	colnum = int(posx / BOXWIDTH + 0.5)
+	valid_pos = (colnum * BOXWIDTH + BOARDMARGIN, rownum * BOXWIDTH + BOARDMARGIN)
+	DISTANCEFROMVALIDPOS = sqrt(pow(valid_pos[0] - pos[0], 2) + pow(valid_pos[1] - pos[1], 2)) 
+	print(DISTANCEFROMVALIDPOS)
+	if DISTANCEFROMVALIDPOS < LIMITRADIUS:
+		#print("Acceptable distance")
+		newstone = pygame.image.load("white_stone.png")
+		newstone = pygame.transform.scale(newstone, (STONEWIDTH, STONEHEIGHT))
+		DISPLAYSURF.blit(newstone, valid_pos)
+	else:
+		pass
+		#print("Invalid distance")
+	return (rownum, colnum)
+	#print("pos =", valid_pos)
 
 def print_board(board):
 	print("\n\n\n")
