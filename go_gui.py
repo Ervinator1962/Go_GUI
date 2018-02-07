@@ -60,14 +60,10 @@ def main():
 					res = place_stone(game_board, event.pos, black)
 				else:
 					res = place_stone(game_board, event.pos, white)
-				# TODO: Possible unwanted roundnum advances caused by multiple mousedown events
 				if res == 1:	
 					roundnum += 1
-					show_board(game_board)
-				#print(event.pos)
 			elif event.type == KEYDOWN:
-				if event.key == "K_ESCAPE":
-					# TODO: Possible unwanted roundnum advances caused by multiple mousedown events
+				if pygame.key.name(event.key) == "escape":
 					roundnum += 1
 					break
 			elif event.type == QUIT:
@@ -79,8 +75,6 @@ def main():
 
 
 def place_stone(board, pos, player):
-	# TODO: MAKE STONEWIDTH AND STONEHEIGHT GLOBAL
-	# TODO: 34 as box width throws off position of stones further from the top left corner. Maybe reset and recalibrate when past halfway.
 	LIMITRADIUS = BOXWIDTH / 2
 	posx, posy = pos
 	posx -= BOARDMARGIN
@@ -107,8 +101,7 @@ def place_stone(board, pos, player):
 			player.make_move(board, (colnum, rownum))
 			return 1
 	return 0
-	# TODO: On invalid postion, make a reprompt function or something
-	# return 0
+
 
 def show_board(board):
 	DISPLAYSURF.blit(BOARDIMG, (0, 0))
@@ -143,7 +136,6 @@ def same_colour(board, pos1, pos2):
 
 
 def remove_stones(board, coordinate_list, stones_played_list):
-	# TODO: Check to see if stones_played_list is working properly
 	for (col, row) in coordinate_list:
 		# indicate the current round's captured stones with '.'
 		board[col][row] = "."
@@ -159,7 +151,6 @@ def remove_capture_indicators(board):
 				board[i][j] = "+"
 
 
-# TODO: Check stones_played_list
 def check_liberties(board, pos, stones_played_list):
 	assert on_board(pos) is True, "Position does not lie on the board"
 	# print("New src = %d %d" % (col, row))
