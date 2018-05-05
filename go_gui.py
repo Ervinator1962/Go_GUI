@@ -91,7 +91,7 @@ def place_stone(board, pos, player):
 	if rownum > 18:
 		rownum = 18
 	valid_pos = (colnum * BOXWIDTH + BOARDMARGIN, rownum * BOXWIDTH + BOARDMARGIN)
-	DISTANCEFROMVALIDPOS = sqrt(pow(valid_pos[0] - pos[0], 2) + pow(valid_pos[1] - pos[1], 2)) 
+	DISTANCEFROMVALIDPOS = distance(valid_pos, pos)
 	#print(DISTANCEFROMVALIDPOS)
 	if DISTANCEFROMVALIDPOS < LIMITRADIUS:
 		#print("testing is stone")
@@ -116,7 +116,8 @@ def show_board(board):
 			elif board[i][j] == "O":
 				DISPLAYSURF.blit(STONEWHITE, (posx, posy))
 
-
+def distance(pos1, pos2):
+	return sqrt(pow(pos1[0] - pos2[0], 2) + pow(pos1[1] - pos2[1], 2))
 
 def on_board(pos):
 	#print("pos[0] =", pos[0])
